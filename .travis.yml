@@ -1,13 +1,8 @@
-language: csharp 
-sudo: required 
-mono: none 
-dotnet: 3.0 
-
-os: - linux 
-
-before_script: 
-- dotnet restore ".\SoIoT.sln" 
-
-script: 
-- dotnet build ".\SoIoT.sln" -c Release 
-- dotnet test ".\SoIoT.sln" -c Release -v n
+language: csharp
+solution: SoIoT.sln
+mono: none
+dotnet: 3.1
+install:
+  - dotnet restore
+script:
+  - dotnet build
