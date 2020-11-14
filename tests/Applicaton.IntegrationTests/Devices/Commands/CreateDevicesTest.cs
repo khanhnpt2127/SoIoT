@@ -34,7 +34,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
 
             var device = new CreateDeviceItemCommand
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = "New Devices",
                 ValueStartFrom = 10,
                 ValueEndTo = 11
@@ -48,7 +47,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
 
             item.Should().NotBeNull();
             item.Name.Should().Be(device.Name);
-            item.Id.Should().Be(device.Id);
             item.CreatedBy.Should().Be(userId);
             item.LastModifiedBy.Should().BeNull();
             item.LastModified.Should().BeNull();
@@ -60,7 +58,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
 
             var command = new CreateDeviceItemCommand
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = "New Devices",
                 ValueStartFrom = 12,
                 ValueEndTo = 11
