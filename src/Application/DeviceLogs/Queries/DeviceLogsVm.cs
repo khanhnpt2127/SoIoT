@@ -8,7 +8,8 @@ namespace SoIoT.Application.DeviceLogs.Queries
 {
     public class DeviceLogsVm
     {
-        public IList<SensorLogsDto> Lists  { get; set; }
-        
+        public DeviceInfoDto Device { get; set; }
+
+        public IList<SensorLogsDto> Data { get; set; }
     }
 }

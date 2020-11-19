@@ -527,12 +527,38 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "lists": {
+          "device": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DeviceInfoDto"
+              }
+            ]
+          },
+          "data": {
             "type": "array",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/SensorLogsDto"
             }
+          }
+        }
+      },
+      "DeviceInfoDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceUnit": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

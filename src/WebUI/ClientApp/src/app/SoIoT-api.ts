@@ -894,7 +894,8 @@ export interface IDevicesDto {
 }
 
 export class DeviceLogsVm implements IDeviceLogsVm {
-    lists?: SensorLogsDto[] | undefined;
+    device?: DeviceInfoDto | undefined;
+    data?: SensorLogsDto[] | undefined;
 
     constructor(data?: IDeviceLogsVm) {
         if (data) {
@@ -907,10 +908,11 @@ export class DeviceLogsVm implements IDeviceLogsVm {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["lists"])) {
-                this.lists = [] as any;
-                for (let item of _data["lists"])
-                    this.lists!.push(SensorLogsDto.fromJS(item));
+            this.device = _data["device"] ? DeviceInfoDto.fromJS(_data["device"]) : <any>undefined;
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(SensorLogsDto.fromJS(item));
             }
         }
     }
@@ -924,17 +926,63 @@ export class DeviceLogsVm implements IDeviceLogsVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.lists)) {
-            data["lists"] = [];
-            for (let item of this.lists)
-                data["lists"].push(item.toJSON());
+        data["device"] = this.device ? this.device.toJSON() : <any>undefined;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
         }
         return data; 
     }
 }
 
 export interface IDeviceLogsVm {
-    lists?: SensorLogsDto[] | undefined;
+    device?: DeviceInfoDto | undefined;
+    data?: SensorLogsDto[] | undefined;
+}
+
+export class DeviceInfoDto implements IDeviceInfoDto {
+    id?: string | undefined;
+    deviceType?: string | undefined;
+    deviceUnit?: string | undefined;
+
+    constructor(data?: IDeviceInfoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.deviceType = _data["deviceType"];
+            this.deviceUnit = _data["deviceUnit"];
+        }
+    }
+
+    static fromJS(data: any): DeviceInfoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceInfoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["deviceType"] = this.deviceType;
+        data["deviceUnit"] = this.deviceUnit;
+        return data; 
+    }
+}
+
+export interface IDeviceInfoDto {
+    id?: string | undefined;
+    deviceType?: string | undefined;
+    deviceUnit?: string | undefined;
 }
 
 export class SensorLogsDto implements ISensorLogsDto {

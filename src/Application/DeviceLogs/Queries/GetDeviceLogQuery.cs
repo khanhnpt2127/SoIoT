@@ -49,7 +49,11 @@ namespace SoIoT.Application.DeviceLogs.Queries
 
             return new DeviceLogsVm
             {
-                Lists = await _context.SensorLogs.
+                Device = new DeviceInfoDto { 
+                    Id = request.SensorId,
+                    DeviceType = _context.Devices.FirstOrDefault(x=> x.Id == request.SensorId).SensorType.ToString()
+                },                        
+                Data = await _context.SensorLogs.
                     ProjectTo<SensorLogsDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)
             };

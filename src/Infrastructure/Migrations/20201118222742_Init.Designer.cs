@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoIoT.Infrastructure.Persistence;
 
-namespace SoIoT.Infrastructure.Persistence.Migrations
+namespace SoIoT.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201113122121_remove_sensorLog")]
-    partial class remove_sensorLog
+    [Migration("20201118222742_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -258,6 +258,12 @@ namespace SoIoT.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SensorType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SensorUnitId")
+                        .HasColumnType("int");
+
                     b.Property<double>("ValueEndTo")
                         .HasColumnType("float");
 
@@ -265,6 +271,9 @@ namespace SoIoT.Infrastructure.Persistence.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SensorUnitId")
+                        .IsUnique();
 
                     b.ToTable("Devices");
                 });
@@ -299,6 +308,36 @@ namespace SoIoT.Infrastructure.Persistence.Migrations
                     b.HasIndex("SensorId");
 
                     b.ToTable("SensorLogs");
+                });
+
+            modelBuilder.Entity("SoIoT.Domain.Entities.SensorUnit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SensorUnits");
                 });
 
             modelBuilder.Entity("SoIoT.Domain.Entities.TodoItem", b =>
@@ -495,9 +534,18 @@ namespace SoIoT.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SoIoT.Domain.Entities.Sensor", b =>
+                {
+                    b.HasOne("SoIoT.Domain.Entities.SensorUnit", "SensorUnit")
+                        .WithOne("Sensor")
+                        .HasForeignKey("SoIoT.Domain.Entities.Sensor", "SensorUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SoIoT.Domain.Entities.SensorLog", b =>
                 {
-                    b.HasOne("SoIoT.Domain.Entities.Sensor", null)
+                    b.HasOne("SoIoT.Domain.Entities.Sensor", "Sensor")
                         .WithMany("SensorLogs")
                         .HasForeignKey("SensorId");
                 });

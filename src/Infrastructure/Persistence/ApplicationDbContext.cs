@@ -38,6 +38,8 @@ namespace SoIoT.Infrastructure.Persistence
 
         public DbSet<SensorLog> SensorLogs { get; set; }
 
+        public DbSet<SensorUnit> SensorUnits { get; set; }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
@@ -111,6 +113,8 @@ namespace SoIoT.Infrastructure.Persistence
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            builder.Entity<Sensor>().HasOne<SensorUnit>(s => s.SensorUnit).WithOne(ad => ad.Sensor)
+                .HasForeignKey<Sensor>(ad => ad.SensorUnitId);
             base.OnModelCreating(builder);
         }
     }

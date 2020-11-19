@@ -8,6 +8,7 @@ using Microsoft.VisualBasic;
 using NUnit.Framework;
 using SoIoT.Application.Common.Exceptions;
 using SoIoT.Application.DeviceLogs.Commands;
+using SoIoT.Application.DeviceLogs.Queries;
 using SoIoT.Application.Devices.Commands.CreateDeviceItem;
 using SoIoT.Domain.Entities;
 
@@ -124,6 +125,34 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             sensorItem.LastModified.Should().BeNull();
         }
 
+
+        [Test]
+        public async Task ShouldRerturnACorrectVM()
+        { 
+             
+            var userId = await RunAsDefaultUserAsync();
+
+            var device = new CreateDeviceItemCommand
+            {
+                Name = "New Devices",
+                ValueStartFrom = 10,
+                ValueEndTo = 15
+            };
+
+            var deviceId = await SendAsync(device);
+
+            var item = await FindAsync<Sensor>(deviceId);
+
+            var command = new GetDeviceLogQuery() {
+                SensorId = item.Id
+            };
+
+            var deviceVm = await SendAsync(command);
+
+            deviceVm.Device.Id.Should().Be(item.Id);
+            deviceVm.Data.Should().NotBeNull();
+            deviceVm.Device.DeviceType.Should().Be("Temparature");
+        }
 
 
     }
