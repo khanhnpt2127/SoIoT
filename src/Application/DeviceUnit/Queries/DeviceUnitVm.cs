@@ -8,6 +8,6 @@ namespace SoIoT.Application.DeviceUnit.Queries
 {
     public class DeviceUnitVm
     {
-         
+        public DeviceUnitDto DeviceUnit { get; set; } 
     }
 }

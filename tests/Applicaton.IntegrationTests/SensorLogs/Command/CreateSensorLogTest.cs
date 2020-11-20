@@ -39,7 +39,9 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             {
                 Name = "New Devices",
                 ValueStartFrom = 10,
-                ValueEndTo = 11
+                ValueEndTo = 11,
+                SensorUnitName = "Celcius",
+                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -67,7 +69,9 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             {
                 Name = "New Devices",
                 ValueStartFrom = 10,
-                ValueEndTo = 15
+                ValueEndTo = 15,
+                SensorUnitName = "Celcius",
+                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -101,7 +105,9 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             {
                 Name = "New Devices",
                 ValueStartFrom = 10,
-                ValueEndTo = 15
+                ValueEndTo = 15,
+                SensorUnitName = "Celcius",
+                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -136,7 +142,9 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             {
                 Name = "New Devices",
                 ValueStartFrom = 10,
-                ValueEndTo = 15
+                ValueEndTo = 15,
+                SensorUnitName = "Celcius",
+                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);

@@ -485,6 +485,14 @@
           "valueEndTo": {
             "type": "number",
             "format": "double"
+          },
+          "sensorUnitName": {
+            "type": "string",
+            "nullable": true
+          },
+          "sensorUnitString": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

@@ -6,10 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SoIoT.Application.Common.Interfaces;
+using SoIoT.Domain.Entities;
 
 namespace SoIoT.Application.DeviceUnit.Command
 {
-    public class CreateDeviceUnitCommand : IRequest<int>
+    public class CreateDeviceUnitCommand : IRequest<SensorUnit>
     {
         public string Name { get; set; }
 
@@ -17,7 +18,7 @@ namespace SoIoT.Application.DeviceUnit.Command
     }
 
 
-    public class CreateDeviceUnitCommandHandler : IRequestHandler<CreateDeviceUnitCommand, int>
+    public class CreateDeviceUnitCommandHandler : IRequestHandler<CreateDeviceUnitCommand, SensorUnit>
     {
 
         private readonly IApplicationDbContext _context;
@@ -28,7 +29,7 @@ namespace SoIoT.Application.DeviceUnit.Command
         }
 
 
-        public async Task<int> Handle(CreateDeviceUnitCommand request, CancellationToken cancellationToken)
+        public async Task<SensorUnit> Handle(CreateDeviceUnitCommand request, CancellationToken cancellationToken)
         {
             var sensorUnit = _context.SensorUnits.FirstOrDefault(x => x.Name == request.Name);
             if (sensorUnit == null)
@@ -42,7 +43,7 @@ namespace SoIoT.Application.DeviceUnit.Command
                 await _context.SaveChangesAsync(cancellationToken);
             }
 
-            return sensorUnit.Id;
+            return sensorUnit;
         }
     }
 }

@@ -761,6 +761,8 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     name?: string | undefined;
     valueStartFrom?: number;
     valueEndTo?: number;
+    sensorUnitName?: string | undefined;
+    sensorUnitString?: string | undefined;
 
     constructor(data?: ICreateDeviceItemCommand) {
         if (data) {
@@ -776,6 +778,8 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
             this.name = _data["name"];
             this.valueStartFrom = _data["valueStartFrom"];
             this.valueEndTo = _data["valueEndTo"];
+            this.sensorUnitName = _data["sensorUnitName"];
+            this.sensorUnitString = _data["sensorUnitString"];
         }
     }
 
@@ -791,6 +795,8 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
         data["name"] = this.name;
         data["valueStartFrom"] = this.valueStartFrom;
         data["valueEndTo"] = this.valueEndTo;
+        data["sensorUnitName"] = this.sensorUnitName;
+        data["sensorUnitString"] = this.sensorUnitString;
         return data; 
     }
 }
@@ -799,6 +805,8 @@ export interface ICreateDeviceItemCommand {
     name?: string | undefined;
     valueStartFrom?: number;
     valueEndTo?: number;
+    sensorUnitName?: string | undefined;
+    sensorUnitString?: string | undefined;
 }
 
 export class DevicesVm implements IDevicesVm {

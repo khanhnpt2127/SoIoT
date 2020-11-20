@@ -36,7 +36,9 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
             {
                 Name = "New Devices",
                 ValueStartFrom = 10,
-                ValueEndTo = 11
+                ValueEndTo = 11,
+                SensorUnitName = "Celcius",
+                SensorUnitString = "C"
             };
 
 

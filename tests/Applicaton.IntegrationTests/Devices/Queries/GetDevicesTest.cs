@@ -13,11 +13,13 @@ namespace SoIoT.Application.IntegrationTests.Devices.Queries
     public class GetDevicesTest : TestBase
     {
         [Test]
-        public async Task ShouldReturnDevices()
+        public async Task ShouldNotReturnNull()
         {
             var query = new GetDevicesQuery();
             var result = await SendAsync(query);
-            result.Lists.Should().NotBeEmpty();
+            result.Lists.Should().NotBeNull();
         }
+
+
     }
 }

@@ -8,16 +8,18 @@ using AutoMapper;
 using MediatR;
 using SoIoT.Application.Common.Interfaces;
 using SoIoT.Application.DeviceUnit.Command;
+using SoIoT.Domain.Entities;
 
 namespace SoIoT.Application.DeviceUnit.Queries
 {
-    public class GetDeviceUnitQuery : IRequest<DeviceUnitVm> 
+    public class GetDeviceUnitQuery : IRequest<SensorUnit> 
     {
         public string DeviceUnitName { get; set; }
+        public string DeviceUnitString { get; set; }
     }
 
 
-    public class GetDeviceUnitHandler : IRequestHandler<GetDeviceUnitQuery, DeviceUnitVm>
+    public class GetDeviceUnitHandler : IRequestHandler<GetDeviceUnitQuery, SensorUnit>
     {
 
         private readonly IApplicationDbContext _context;
@@ -32,16 +34,16 @@ namespace SoIoT.Application.DeviceUnit.Queries
         }
 
 
-        public async Task<DeviceUnitVm> Handle(GetDeviceUnitQuery request, CancellationToken cancellationToken)
+        public async Task<SensorUnit> Handle(GetDeviceUnitQuery request, CancellationToken cancellationToken)
         {
-            var sensorUnit = _context.SensorUnits.FirstOrDefault(x => x.Name == request.DeviceUnitName);
-            if (sensorUnit == null)
-                await _mediator.Send(new CreateDeviceUnitCommand { });
+            var sensorUnit = _context.SensorUnits.FirstOrDefault(x => x.Name == request.DeviceUnitName) ??
+                             await _mediator.Send(new CreateDeviceUnitCommand
+                             {
+                                 Name = request.DeviceUnitName,
+                                 UnitString = request.DeviceUnitString
+                             });
 
-            return new DeviceUnitVm
-            {
-
-            };
+            return sensorUnit;
         }
     }
 }

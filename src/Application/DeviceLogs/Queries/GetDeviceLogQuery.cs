@@ -51,7 +51,7 @@ namespace SoIoT.Application.DeviceLogs.Queries
             {
                 Device = new DeviceInfoDto { 
                     Id = request.SensorId,
-                    DeviceType = _context.Devices.FirstOrDefault(x=> x.Id == request.SensorId).SensorType.ToString()
+                    DeviceType = _context.Devices.FirstOrDefault(x=> x.Id == request.SensorId)?.SensorType.ToString()
                 },                        
                 Data = await _context.SensorLogs.
                     ProjectTo<SensorLogsDto>(_mapper.ConfigurationProvider)

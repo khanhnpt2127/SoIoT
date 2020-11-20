@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SoIoT.Application.Common.Interfaces;
+using SoIoT.Application.DeviceUnit.Command;
+using SoIoT.Application.DeviceUnit.Queries;
 using SoIoT.Domain.Entities;
 
 namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
@@ -16,6 +18,10 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
         public double ValueStartFrom { get; set; }
 
         public double ValueEndTo { get; set; }
+
+        public string SensorUnitName { get; set; }
+
+        public string SensorUnitString { get; set; }
     }
 
 
@@ -23,19 +29,25 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
     {
         private readonly IApplicationDbContext _context;
 
-        public CreateDeviceItemCommandHandler(IApplicationDbContext context)
+        private readonly IMediator _mediator;
+        public CreateDeviceItemCommandHandler(IApplicationDbContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         public async Task<string> Handle(CreateDeviceItemCommand request, CancellationToken cancellationToken)
         {
+            var sensorUnit = _mediator.Send(new GetDeviceUnitQuery { DeviceUnitName = request.SensorUnitName, DeviceUnitString = request.SensorUnitString});
+            
+
             var entity = new Sensor
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 ValueStartFrom = request.ValueStartFrom,
-                ValueEndTo = request.ValueEndTo
+                ValueEndTo = request.ValueEndTo,
+                SensorUnit = sensorUnit.Result
             };
 
 
