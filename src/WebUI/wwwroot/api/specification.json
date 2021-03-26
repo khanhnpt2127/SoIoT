@@ -493,8 +493,23 @@
           "sensorUnitString": {
             "type": "string",
             "nullable": true
+          },
+          "eSensorType": {
+            "$ref": "#/components/schemas/ESensorType"
           }
         }
+      },
+      "ESensorType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Temparature",
+          "Smoke"
+        ],
+        "enum": [
+          0,
+          1
+        ]
       },
       "DevicesVm": {
         "type": "object",
@@ -557,6 +572,10 @@
         "additionalProperties": false,
         "properties": {
           "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceName": {
             "type": "string",
             "nullable": true
           },

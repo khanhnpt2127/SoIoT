@@ -160,6 +160,7 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             deviceVm.Device.Id.Should().Be(item.Id);
             deviceVm.Data.Should().NotBeNull();
             deviceVm.Device.DeviceType.Should().Be("Temparature");
+            deviceVm.Device.DeviceUnit.Should().Be("C");
         }
 
 

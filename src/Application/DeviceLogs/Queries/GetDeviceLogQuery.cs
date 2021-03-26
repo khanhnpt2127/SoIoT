@@ -37,25 +37,30 @@ namespace SoIoT.Application.DeviceLogs.Queries
 
         public async Task<DeviceLogsVm> Handle(GetDeviceLogQuery request, CancellationToken cancellationToken)
         {
-
-            // if (string.IsNullOrEmpty(request.SensorId))
-            //     return ;
-
             var createDeviceLogCommand = new CreateDeviceLogsCommand
             {
                 Sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId) 
             };
             await _mediator.Send(createDeviceLogCommand);
 
+
+            var data = Queryable.FirstOrDefault(_context.Devices.Include(x=>x.SensorUnit), x=>x.Id == request.SensorId);
+
+            var d = _context.SensorLogs.Where(x => x.Sensor.Id == data.Id).ToList();
+
+            var dt = _mapper.Map<List<SensorLogsDto>>(d);
+
+
             return new DeviceLogsVm
             {
                 Device = new DeviceInfoDto { 
                     Id = request.SensorId,
-                    DeviceType = _context.Devices.FirstOrDefault(x=> x.Id == request.SensorId)?.SensorType.ToString()
+                    DeviceType = data?.SensorType.ToString(), 
+                    DeviceUnit = data?.SensorUnit?.UnitString,
+                    DeviceName = data?.Name
                 },                        
-                Data = await _context.SensorLogs.
-                    ProjectTo<SensorLogsDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
+
+                Data = dt 
             };
 
         }

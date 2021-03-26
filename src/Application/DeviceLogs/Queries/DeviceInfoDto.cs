@@ -8,6 +8,8 @@ namespace SoIoT.Application.DeviceLogs.Queries
     {
         public string Id { get; set; }
 
+        public string DeviceName { get; set; }
+
         public string DeviceType { get; set; }
 
         public string DeviceUnit { get; set; }

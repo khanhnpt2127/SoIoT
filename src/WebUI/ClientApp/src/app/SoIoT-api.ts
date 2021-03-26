@@ -763,6 +763,7 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     valueEndTo?: number;
     sensorUnitName?: string | undefined;
     sensorUnitString?: string | undefined;
+    eSensorType?: ESensorType;
 
     constructor(data?: ICreateDeviceItemCommand) {
         if (data) {
@@ -780,6 +781,7 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
             this.valueEndTo = _data["valueEndTo"];
             this.sensorUnitName = _data["sensorUnitName"];
             this.sensorUnitString = _data["sensorUnitString"];
+            this.eSensorType = _data["eSensorType"];
         }
     }
 
@@ -797,6 +799,7 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
         data["valueEndTo"] = this.valueEndTo;
         data["sensorUnitName"] = this.sensorUnitName;
         data["sensorUnitString"] = this.sensorUnitString;
+        data["eSensorType"] = this.eSensorType;
         return data; 
     }
 }
@@ -807,6 +810,12 @@ export interface ICreateDeviceItemCommand {
     valueEndTo?: number;
     sensorUnitName?: string | undefined;
     sensorUnitString?: string | undefined;
+    eSensorType?: ESensorType;
+}
+
+export enum ESensorType {
+    Temparature = 0,
+    Smoke = 1,
 }
 
 export class DevicesVm implements IDevicesVm {
@@ -951,6 +960,7 @@ export interface IDeviceLogsVm {
 
 export class DeviceInfoDto implements IDeviceInfoDto {
     id?: string | undefined;
+    deviceName?: string | undefined;
     deviceType?: string | undefined;
     deviceUnit?: string | undefined;
 
@@ -966,6 +976,7 @@ export class DeviceInfoDto implements IDeviceInfoDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.deviceName = _data["deviceName"];
             this.deviceType = _data["deviceType"];
             this.deviceUnit = _data["deviceUnit"];
         }
@@ -981,6 +992,7 @@ export class DeviceInfoDto implements IDeviceInfoDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["deviceName"] = this.deviceName;
         data["deviceType"] = this.deviceType;
         data["deviceUnit"] = this.deviceUnit;
         return data; 
@@ -989,6 +1001,7 @@ export class DeviceInfoDto implements IDeviceInfoDto {
 
 export interface IDeviceInfoDto {
     id?: string | undefined;
+    deviceName?: string | undefined;
     deviceType?: string | undefined;
     deviceUnit?: string | undefined;
 }

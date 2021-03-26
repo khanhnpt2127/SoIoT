@@ -8,6 +8,7 @@ using SoIoT.Application.Common.Interfaces;
 using SoIoT.Application.DeviceUnit.Command;
 using SoIoT.Application.DeviceUnit.Queries;
 using SoIoT.Domain.Entities;
+using SoIoT.Domain.Enums;
 
 namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
 {
@@ -22,6 +23,8 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
         public string SensorUnitName { get; set; }
 
         public string SensorUnitString { get; set; }
+
+        public ESensorType ESensorType { get; set; }
     }
 
 
@@ -47,7 +50,8 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
                 Name = request.Name,
                 ValueStartFrom = request.ValueStartFrom,
                 ValueEndTo = request.ValueEndTo,
-                SensorUnit = sensorUnit.Result
+                SensorUnit = sensorUnit.Result,
+                SensorType = request.ESensorType
             };
 
 
