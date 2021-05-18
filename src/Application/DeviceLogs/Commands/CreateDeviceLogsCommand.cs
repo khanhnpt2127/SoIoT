@@ -2,8 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Newtonsoft.Json;
 using SoIoT.Application.Common.Interfaces;
 using SoIoT.Domain.Entities;
+using SoIoT.Domain.Entities.RequestBody;
 
 namespace SoIoT.Application.DeviceLogs.Commands
 {
@@ -11,7 +13,7 @@ namespace SoIoT.Application.DeviceLogs.Commands
     {
         public int Id { get; set; }
 
-        public double? Value { get; set; }
+        public string Value { get; set; }
 
         public Sensor Sensor{ get; set; }
     }
@@ -32,56 +34,9 @@ namespace SoIoT.Application.DeviceLogs.Commands
 
         public async Task<int> Handle(CreateDeviceLogsCommand request, CancellationToken cancellationToken)
         {
-            double startValue;
-            double endValue;
-            if (_context.SensorLogs.Any(x => x.Sensor.Id == request.Sensor.Id))
-            {
-                var lastValue = _context.SensorLogs
-                    .Where(s => s.Sensor.Id == request.Sensor.Id).OrderByDescending(s => s.Created).First();
+            var entity = await _context.SensorLogs.AddAsync(new SensorLog {Sensor = request.Sensor, Value = request.Value}, cancellationToken);
 
-                var delta = lastValue.Created - _dateTime.Now;
-                int deltaIncrease;
-                if (delta.TotalHours < 5)
-                    deltaIncrease = 1;
-                // ReSharper disable once ComplexConditionExpression
-                else if (delta.TotalHours > 5 && delta.TotalHours < 10)
-                    deltaIncrease = 2;
-                else
-                    deltaIncrease = 3;
-
-
-                startValue = lastValue.Value - deltaIncrease > request.Sensor.ValueStartFrom
-                    ? lastValue.Value - deltaIncrease
-                    : request.Sensor.ValueStartFrom;
-
-                endValue = lastValue.Value + deltaIncrease < request.Sensor.ValueEndTo
-                    ? lastValue.Value + deltaIncrease
-                    : request.Sensor.ValueEndTo;
-            }
-            else
-            {
-                startValue = request.Sensor.ValueStartFrom;
-                endValue = request.Sensor.ValueEndTo;
-            }
-
-            SensorLog entity;
-            if (request.Value != null)
-                entity = new SensorLog
-                {
-                    Value = request.Value.Value,
-                };
-            else
-                entity = new SensorLog
-                {
-                    Value = _randomService.RandomNumberBetween(startValue, endValue)
-                };
-
-            var device = await _context.Devices.FindAsync(request.Sensor.Id);
-            device.SensorLogs.Add(entity);
-
-            await _context.SaveChangesAsync(cancellationToken); 
-
-            return entity.Id;
+            return entity.Entity.Id;
         }
     }
 }

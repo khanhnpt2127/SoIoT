@@ -35,8 +35,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ValueStartFrom = 10,
-                ValueEndTo = 11,
                 SensorUnitName = "Celcius",
                 SensorUnitString = "C"
             };
@@ -61,8 +59,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
             var command = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ValueStartFrom = 12,
-                ValueEndTo = 11
             };
 
             FluentActions.Invoking(() =>

@@ -11,9 +11,8 @@ namespace SoIoT.Application.DeviceLogs.Commands
     {
         public CreateDeviceLogsCommandValidator()
         {
-            RuleFor(v => v.Value).GreaterThanOrEqualTo(s => s.Sensor.ValueStartFrom).WithMessage("fail greater than");
-            RuleFor(v => v.Value).LessThanOrEqualTo(s => s.Sensor.ValueEndTo).WithMessage("fail less than");
-            RuleFor(v => v.Sensor).NotNull();
+            RuleFor(v => v.Value).NotEmpty().WithMessage("should provide a value");
+            RuleFor(v => v.Sensor).NotNull().WithMessage("should provide device object");
         }
     }
 }

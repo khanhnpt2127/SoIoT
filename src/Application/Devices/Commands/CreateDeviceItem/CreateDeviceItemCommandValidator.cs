@@ -15,7 +15,6 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
             RuleFor(v => v.Name)
                 .NotEmpty();
 
-            RuleFor(v => v.ValueStartFrom).LessThan(v => v.ValueEndTo).NotEmpty();
         }
     }
 }

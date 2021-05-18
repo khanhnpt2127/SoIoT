@@ -40,6 +40,10 @@ namespace SoIoT.Infrastructure.Persistence
 
         public DbSet<SensorUnit> SensorUnits { get; set; }
 
+        public DbSet<ThingsDesc> ThingsDescs { get; set; }
+
+        public DbSet<DeviceThingsDesc> DeviceThingsDescs { get; set; }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
@@ -115,6 +119,10 @@ namespace SoIoT.Infrastructure.Persistence
 
             builder.Entity<Sensor>().HasOne<SensorUnit>(s => s.SensorUnit).WithOne(ad => ad.Sensor)
                 .HasForeignKey<Sensor>(ad => ad.SensorUnitId);
+
+            builder.Entity<Sensor>().HasOne<DeviceThingsDesc>(s => s.DeviceThingsDesc).WithOne(ad => ad.Sensor)
+                .HasForeignKey<Sensor>(ad => ad.DeviceThingsDescId);
+
             base.OnModelCreating(builder);
         }
     }

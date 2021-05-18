@@ -18,6 +18,9 @@ export interface IDevicesClient {
     create(command: CreateDeviceItemCommand): Observable<string>;
     get(): Observable<DevicesVm>;
     getDeviceLog(sensorId: string | null): Observable<DeviceLogsVm>;
+    getSingleDeviceLog(sensorId: string | null): Observable<DeviceSingleLogsVm>;
+    getDeviceThingsDesc(sensorId: string | null): Observable<DeviceThingsDescVm>;
+    changeHuePhilipState(sensorId: string | null, lightId: string | null, content: HueLightPhillips): Observable<string>;
 }
 
 @Injectable({
@@ -134,7 +137,7 @@ export class DevicesClient implements IDevicesClient {
     }
 
     getDeviceLog(sensorId: string | null): Observable<DeviceLogsVm> {
-        let url_ = this.baseUrl + "/api/Devices/{sensorId}";
+        let url_ = this.baseUrl + "/api/Devices/AllLog/{sensorId}";
         if (sensorId === undefined || sensorId === null)
             throw new Error("The parameter 'sensorId' must be defined.");
         url_ = url_.replace("{sensorId}", encodeURIComponent("" + sensorId)); 
@@ -182,6 +185,285 @@ export class DevicesClient implements IDevicesClient {
             }));
         }
         return _observableOf<DeviceLogsVm>(<any>null);
+    }
+
+    getSingleDeviceLog(sensorId: string | null): Observable<DeviceSingleLogsVm> {
+        let url_ = this.baseUrl + "/api/Devices/{sensorId}";
+        if (sensorId === undefined || sensorId === null)
+            throw new Error("The parameter 'sensorId' must be defined.");
+        url_ = url_.replace("{sensorId}", encodeURIComponent("" + sensorId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSingleDeviceLog(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSingleDeviceLog(<any>response_);
+                } catch (e) {
+                    return <Observable<DeviceSingleLogsVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeviceSingleLogsVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetSingleDeviceLog(response: HttpResponseBase): Observable<DeviceSingleLogsVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeviceSingleLogsVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeviceSingleLogsVm>(<any>null);
+    }
+
+    getDeviceThingsDesc(sensorId: string | null): Observable<DeviceThingsDescVm> {
+        let url_ = this.baseUrl + "/api/Devices/{sensorId}/thingdesc";
+        if (sensorId === undefined || sensorId === null)
+            throw new Error("The parameter 'sensorId' must be defined.");
+        url_ = url_.replace("{sensorId}", encodeURIComponent("" + sensorId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDeviceThingsDesc(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDeviceThingsDesc(<any>response_);
+                } catch (e) {
+                    return <Observable<DeviceThingsDescVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeviceThingsDescVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDeviceThingsDesc(response: HttpResponseBase): Observable<DeviceThingsDescVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeviceThingsDescVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeviceThingsDescVm>(<any>null);
+    }
+
+    changeHuePhilipState(sensorId: string | null, lightId: string | null, content: HueLightPhillips): Observable<string> {
+        let url_ = this.baseUrl + "/api/Devices/{sensorId}/lights/{lightId}/state";
+        if (sensorId === undefined || sensorId === null)
+            throw new Error("The parameter 'sensorId' must be defined.");
+        url_ = url_.replace("{sensorId}", encodeURIComponent("" + sensorId)); 
+        if (lightId === undefined || lightId === null)
+            throw new Error("The parameter 'lightId' must be defined.");
+        url_ = url_.replace("{lightId}", encodeURIComponent("" + lightId)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(content);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeHuePhilipState(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeHuePhilipState(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeHuePhilipState(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
+    }
+}
+
+export interface IThingsDescClient {
+    get(): Observable<ThingsDescVm>;
+    create(command: CreateThingsDescCommand): Observable<string>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ThingsDescClient implements IThingsDescClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    get(): Observable<ThingsDescVm> {
+        let url_ = this.baseUrl + "/api/ThingsDesc";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ThingsDescVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ThingsDescVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ThingsDescVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ThingsDescVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ThingsDescVm>(<any>null);
+    }
+
+    create(command: CreateThingsDescCommand): Observable<string> {
+        let url_ = this.baseUrl + "/api/ThingsDesc";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
     }
 }
 
@@ -759,11 +1041,10 @@ export class WeatherForecastClient implements IWeatherForecastClient {
 
 export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     name?: string | undefined;
-    valueStartFrom?: number;
-    valueEndTo?: number;
     sensorUnitName?: string | undefined;
     sensorUnitString?: string | undefined;
     eSensorType?: ESensorType;
+    thingsDescName?: string | undefined;
 
     constructor(data?: ICreateDeviceItemCommand) {
         if (data) {
@@ -777,11 +1058,10 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.valueStartFrom = _data["valueStartFrom"];
-            this.valueEndTo = _data["valueEndTo"];
             this.sensorUnitName = _data["sensorUnitName"];
             this.sensorUnitString = _data["sensorUnitString"];
             this.eSensorType = _data["eSensorType"];
+            this.thingsDescName = _data["thingsDescName"];
         }
     }
 
@@ -795,27 +1075,25 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["valueStartFrom"] = this.valueStartFrom;
-        data["valueEndTo"] = this.valueEndTo;
         data["sensorUnitName"] = this.sensorUnitName;
         data["sensorUnitString"] = this.sensorUnitString;
         data["eSensorType"] = this.eSensorType;
+        data["thingsDescName"] = this.thingsDescName;
         return data; 
     }
 }
 
 export interface ICreateDeviceItemCommand {
     name?: string | undefined;
-    valueStartFrom?: number;
-    valueEndTo?: number;
     sensorUnitName?: string | undefined;
     sensorUnitString?: string | undefined;
     eSensorType?: ESensorType;
+    thingsDescName?: string | undefined;
 }
 
 export enum ESensorType {
-    Temparature = 0,
-    Smoke = 1,
+    HueWhiteLamp = 0,
+    HueDaySensor = 1,
 }
 
 export class DevicesVm implements IDevicesVm {
@@ -1048,6 +1326,302 @@ export interface ISensorLogsDto {
     id?: number;
     value?: number;
     created?: Date;
+}
+
+export class DeviceSingleLogsVm implements IDeviceSingleLogsVm {
+    device?: DeviceInfoDto | undefined;
+    data?: SensorLogsDto | undefined;
+
+    constructor(data?: IDeviceSingleLogsVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.device = _data["device"] ? DeviceInfoDto.fromJS(_data["device"]) : <any>undefined;
+            this.data = _data["data"] ? SensorLogsDto.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DeviceSingleLogsVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceSingleLogsVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["device"] = this.device ? this.device.toJSON() : <any>undefined;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IDeviceSingleLogsVm {
+    device?: DeviceInfoDto | undefined;
+    data?: SensorLogsDto | undefined;
+}
+
+export class DeviceThingsDescVm implements IDeviceThingsDescVm {
+    deviceThingsDescDto?: DeviceThingsDescDto | undefined;
+
+    constructor(data?: IDeviceThingsDescVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.deviceThingsDescDto = _data["deviceThingsDescDto"] ? DeviceThingsDescDto.fromJS(_data["deviceThingsDescDto"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DeviceThingsDescVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceThingsDescVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deviceThingsDescDto"] = this.deviceThingsDescDto ? this.deviceThingsDescDto.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IDeviceThingsDescVm {
+    deviceThingsDescDto?: DeviceThingsDescDto | undefined;
+}
+
+export class DeviceThingsDescDto implements IDeviceThingsDescDto {
+    id?: string | undefined;
+    deviceId?: string | undefined;
+    value?: string | undefined;
+
+    constructor(data?: IDeviceThingsDescDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.deviceId = _data["deviceId"];
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): DeviceThingsDescDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeviceThingsDescDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["deviceId"] = this.deviceId;
+        data["value"] = this.value;
+        return data; 
+    }
+}
+
+export interface IDeviceThingsDescDto {
+    id?: string | undefined;
+    deviceId?: string | undefined;
+    value?: string | undefined;
+}
+
+export class HueLightPhillips implements IHueLightPhillips {
+    on?: boolean;
+    bri?: number;
+    alert?: string | undefined;
+    transisiontime?: number;
+    bri_inc?: number;
+
+    constructor(data?: IHueLightPhillips) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.on = _data["on"];
+            this.bri = _data["bri"];
+            this.alert = _data["alert"];
+            this.transisiontime = _data["transisiontime"];
+            this.bri_inc = _data["bri_inc"];
+        }
+    }
+
+    static fromJS(data: any): HueLightPhillips {
+        data = typeof data === 'object' ? data : {};
+        let result = new HueLightPhillips();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["on"] = this.on;
+        data["bri"] = this.bri;
+        data["alert"] = this.alert;
+        data["transisiontime"] = this.transisiontime;
+        data["bri_inc"] = this.bri_inc;
+        return data; 
+    }
+}
+
+export interface IHueLightPhillips {
+    on?: boolean;
+    bri?: number;
+    alert?: string | undefined;
+    transisiontime?: number;
+    bri_inc?: number;
+}
+
+export class ThingsDescVm implements IThingsDescVm {
+    thingsDescDtos?: ThingsDescDto[] | undefined;
+
+    constructor(data?: IThingsDescVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["thingsDescDtos"])) {
+                this.thingsDescDtos = [] as any;
+                for (let item of _data["thingsDescDtos"])
+                    this.thingsDescDtos!.push(ThingsDescDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ThingsDescVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ThingsDescVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.thingsDescDtos)) {
+            data["thingsDescDtos"] = [];
+            for (let item of this.thingsDescDtos)
+                data["thingsDescDtos"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IThingsDescVm {
+    thingsDescDtos?: ThingsDescDto[] | undefined;
+}
+
+export class ThingsDescDto implements IThingsDescDto {
+    id?: string | undefined;
+    value?: string | undefined;
+
+    constructor(data?: IThingsDescDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): ThingsDescDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ThingsDescDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["value"] = this.value;
+        return data; 
+    }
+}
+
+export interface IThingsDescDto {
+    id?: string | undefined;
+    value?: string | undefined;
+}
+
+export class CreateThingsDescCommand implements ICreateThingsDescCommand {
+    name?: string | undefined;
+    value?: string | undefined;
+
+    constructor(data?: ICreateThingsDescCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): CreateThingsDescCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateThingsDescCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["value"] = this.value;
+        return data; 
+    }
+}
+
+export interface ICreateThingsDescCommand {
+    name?: string | undefined;
+    value?: string | undefined;
 }
 
 export class CreateTodoItemCommand implements ICreateTodoItemCommand {

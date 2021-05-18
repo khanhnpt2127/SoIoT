@@ -56,7 +56,7 @@
         }
       }
     },
-    "/api/Devices/{sensorId}": {
+    "/api/Devices/AllLog/{sensorId}": {
       "get": {
         "tags": [
           "Devices"
@@ -81,6 +81,174 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeviceLogsVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Devices/{sensorId}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetSingleDeviceLog",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceSingleLogsVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Devices/{sensorId}/thingdesc": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_GetDeviceThingsDesc",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceThingsDescVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Devices/{sensorId}/lights/{lightId}/state": {
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "Devices_ChangeHuePhilipState",
+        "parameters": [
+          {
+            "name": "sensorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "lightId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "x-name": "content",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HueLightPhillips"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 3
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ThingsDesc": {
+      "get": {
+        "tags": [
+          "ThingsDesc"
+        ],
+        "operationId": "ThingsDesc_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThingsDescVm"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ThingsDesc"
+        ],
+        "operationId": "ThingsDesc_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateThingsDescCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -478,14 +646,6 @@
             "type": "string",
             "nullable": true
           },
-          "valueStartFrom": {
-            "type": "number",
-            "format": "double"
-          },
-          "valueEndTo": {
-            "type": "number",
-            "format": "double"
-          },
           "sensorUnitName": {
             "type": "string",
             "nullable": true
@@ -496,6 +656,10 @@
           },
           "eSensorType": {
             "$ref": "#/components/schemas/ESensorType"
+          },
+          "thingsDescName": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -503,8 +667,8 @@
         "type": "integer",
         "description": "",
         "x-enumNames": [
-          "Temparature",
-          "Smoke"
+          "HueWhiteLamp",
+          "HueDaySensor"
         ],
         "enum": [
           0,
@@ -604,6 +768,126 @@
           "created": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "DeviceSingleLogsVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DeviceInfoDto"
+              }
+            ]
+          },
+          "data": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SensorLogsDto"
+              }
+            ]
+          }
+        }
+      },
+      "DeviceThingsDescVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "deviceThingsDescDto": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DeviceThingsDescDto"
+              }
+            ]
+          }
+        }
+      },
+      "DeviceThingsDescDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "deviceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "HueLightPhillips": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "on": {
+            "type": "boolean"
+          },
+          "bri": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "alert": {
+            "type": "string",
+            "nullable": true
+          },
+          "transisiontime": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bri_inc": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ThingsDescVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "thingsDescDtos": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ThingsDescDto"
+            }
+          }
+        }
+      },
+      "ThingsDescDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateThingsDescCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

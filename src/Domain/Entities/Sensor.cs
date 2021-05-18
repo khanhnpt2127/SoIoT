@@ -17,15 +17,14 @@ namespace SoIoT.Domain.Entities
 
         public string Name { get; set; }
 
-        public double ValueStartFrom { get; set; }
-
-        public double ValueEndTo { get; set; }
-
         public ESensorType SensorType { get; set; }
 
         public int SensorUnitId { get; set; }
         public virtual SensorUnit SensorUnit { get; set; }
 
         public ICollection<SensorLog> SensorLogs { get; private set; }
+        public string DeviceThingsDescId { get; set; }
+        public virtual DeviceThingsDesc DeviceThingsDesc { get; set; }
+
     }
 }

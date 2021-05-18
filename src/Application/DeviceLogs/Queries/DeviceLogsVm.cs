@@ -12,4 +12,15 @@ namespace SoIoT.Application.DeviceLogs.Queries
 
         public IList<SensorLogsDto> Data { get; set; }
     }
+
+
+    public class DeviceSingleLogsVm
+    {
+        public DeviceInfoDto Device { get; set; }
+
+        public SensorLogsDto Data { get; set; }
+
+    }
+
+
 }

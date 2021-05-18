@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoIoT.Infrastructure.Persistence;
 
 namespace SoIoT.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210513115933_add DeviceThingsDesc")]
+    partial class addDeviceThingsDesc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,6 +292,12 @@ namespace SoIoT.Infrastructure.Migrations
                     b.Property<int>("SensorUnitId")
                         .HasColumnType("int");
 
+                    b.Property<double>("ValueEndTo")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ValueStartFrom")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DeviceThingsDescId")
@@ -324,8 +332,8 @@ namespace SoIoT.Infrastructure.Migrations
                     b.Property<string>("SensorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

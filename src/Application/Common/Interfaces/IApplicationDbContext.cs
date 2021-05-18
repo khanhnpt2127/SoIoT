@@ -16,6 +16,12 @@ namespace SoIoT.Application.Common.Interfaces
         DbSet<SensorLog> SensorLogs { get; set; }
 
         DbSet<SensorUnit> SensorUnits { get; set; }
+
+        DbSet<Domain.Entities.ThingsDesc> ThingsDescs { get; set; }
+
+        DbSet<DeviceThingsDesc> DeviceThingsDescs { get; set; }
+
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

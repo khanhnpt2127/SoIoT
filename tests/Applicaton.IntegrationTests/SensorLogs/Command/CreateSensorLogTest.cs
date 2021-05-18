@@ -38,8 +38,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ValueStartFrom = 10,
-                ValueEndTo = 11,
                 SensorUnitName = "Celcius",
                 SensorUnitString = "C"
             };
@@ -48,10 +46,11 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
 
             var item = await FindAsync<Sensor>(deviceId);
 
+             
 
             var command = new CreateDeviceLogsCommand
             {
-                Value = 15,
+
                 Sensor = item
             };
 
@@ -68,8 +67,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ValueStartFrom = 10,
-                ValueEndTo = 15,
                 SensorUnitName = "Celcius",
                 SensorUnitString = "C"
             };
@@ -81,7 +78,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
 
             var command = new CreateDeviceLogsCommand
             {
-                Value = 12,
                 Sensor = item
             };
 
@@ -90,7 +86,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var sensorItem = await FindAsync<SensorLog>(sensorLog);
 
             sensorItem.Should().NotBeNull();
-            sensorItem.Value.Should().Be(12);
             sensorItem.CreatedBy.Should().Be(userId);
             sensorItem.LastModifiedBy.Should().BeNull();
             sensorItem.LastModified.Should().BeNull();
@@ -104,8 +99,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ValueStartFrom = 10,
-                ValueEndTo = 15,
                 SensorUnitName = "Celcius",
                 SensorUnitString = "C"
             };
@@ -125,7 +118,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var sensorItem = await FindAsync<SensorLog>(sensorLog);
 
             sensorItem.Should().NotBeNull();
-            sensorItem.Value.Should().BeGreaterThan(10).And.BeLessThan(15);
             sensorItem.CreatedBy.Should().Be(userId);
             sensorItem.LastModifiedBy.Should().BeNull();
             sensorItem.LastModified.Should().BeNull();
@@ -141,8 +133,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ValueStartFrom = 10,
-                ValueEndTo = 15,
                 SensorUnitName = "Celcius",
                 SensorUnitString = "C"
             };

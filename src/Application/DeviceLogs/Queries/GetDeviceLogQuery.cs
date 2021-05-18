@@ -12,6 +12,8 @@ using SoIoT.Domain.Entities;
 using System.Security.Cryptography.X509Certificates;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using SoIoT.Domain.Entities.RequestBody;
 
 namespace SoIoT.Application.DeviceLogs.Queries
 {
@@ -37,11 +39,32 @@ namespace SoIoT.Application.DeviceLogs.Queries
 
         public async Task<DeviceLogsVm> Handle(GetDeviceLogQuery request, CancellationToken cancellationToken)
         {
-            var createDeviceLogCommand = new CreateDeviceLogsCommand
+
+            var sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId);
+            if (sensor != null)
             {
-                Sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId) 
-            };
-            await _mediator.Send(createDeviceLogCommand);
+                string value = null;
+                switch (sensor.SensorType)
+                {
+                    case Domain.Enums.ESensorType.HueWhiteLamp:
+                        var phillipsRequestBody = new HueLightPhillips
+                            {@on = false, alert = "none", bri = 100, bri_inc = 0, transisiontime = 100};
+                        value = JsonConvert.SerializeObject(phillipsRequestBody);
+                        break;
+                    case Domain.Enums.ESensorType.HueDaySensor:
+                        break;
+                    default:
+                        value = string.Empty;
+                        break;
+                }
+
+                var createDeviceLogCommand = new CreateDeviceLogsCommand
+                {
+                    Sensor = sensor,
+                    Value = value
+                };
+                await _mediator.Send(createDeviceLogCommand);
+            }
 
 
             var data = Queryable.FirstOrDefault(_context.Devices.Include(x=>x.SensorUnit), x=>x.Id == request.SensorId);

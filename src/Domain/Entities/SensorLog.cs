@@ -9,7 +9,7 @@ namespace SoIoT.Domain.Entities
     {
         public int Id { get; set; }
 
-        public double Value { get; set; }
+        public string Value { get; set; }
 
         public Sensor Sensor { get; set; }
     }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SoIoT.Infrastructure.Persistence;
 
 namespace SoIoT.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210513103156_add ThingsDesc")]
+    partial class addThingsDesc
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,31 +238,6 @@ namespace SoIoT.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SoIoT.Domain.Entities.DeviceThingsDesc", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeviceThingsDescs");
-                });
-
             modelBuilder.Entity("SoIoT.Domain.Entities.Sensor", b =>
                 {
                     b.Property<string>("Id")
@@ -271,9 +248,6 @@ namespace SoIoT.Infrastructure.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeviceThingsDescId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -290,11 +264,13 @@ namespace SoIoT.Infrastructure.Migrations
                     b.Property<int>("SensorUnitId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<double>("ValueEndTo")
+                        .HasColumnType("float");
 
-                    b.HasIndex("DeviceThingsDescId")
-                        .IsUnique()
-                        .HasFilter("[DeviceThingsDescId] IS NOT NULL");
+                    b.Property<double>("ValueStartFrom")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("SensorUnitId")
                         .IsUnique();
@@ -324,8 +300,8 @@ namespace SoIoT.Infrastructure.Migrations
                     b.Property<string>("SensorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -588,10 +564,6 @@ namespace SoIoT.Infrastructure.Migrations
 
             modelBuilder.Entity("SoIoT.Domain.Entities.Sensor", b =>
                 {
-                    b.HasOne("SoIoT.Domain.Entities.DeviceThingsDesc", "DeviceThingsDesc")
-                        .WithOne("Sensor")
-                        .HasForeignKey("SoIoT.Domain.Entities.Sensor", "DeviceThingsDescId");
-
                     b.HasOne("SoIoT.Domain.Entities.SensorUnit", "SensorUnit")
                         .WithOne("Sensor")
                         .HasForeignKey("SoIoT.Domain.Entities.Sensor", "SensorUnitId")
