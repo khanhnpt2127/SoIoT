@@ -19,7 +19,7 @@ export interface IDevicesClient {
     get(): Observable<DevicesVm>;
     getDeviceLog(sensorId: string | null): Observable<DeviceLogsVm>;
     getSingleDeviceLog(sensorId: string | null): Observable<DeviceSingleLogsVm>;
-    getDeviceThingsDesc(sensorId: string | null): Observable<DeviceThingsDescVm>;
+    getDeviceThingsDesc(sensorId: string | null): Observable<FileResponse>;
     changeHuePhilipState(sensorId: string | null, lightId: string | null, content: HueLightPhillips): Observable<string>;
 }
 
@@ -238,7 +238,7 @@ export class DevicesClient implements IDevicesClient {
         return _observableOf<DeviceSingleLogsVm>(<any>null);
     }
 
-    getDeviceThingsDesc(sensorId: string | null): Observable<DeviceThingsDescVm> {
+    getDeviceThingsDesc(sensorId: string | null): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Devices/{sensorId}/thingdesc";
         if (sensorId === undefined || sensorId === null)
             throw new Error("The parameter 'sensorId' must be defined.");
@@ -249,7 +249,7 @@ export class DevicesClient implements IDevicesClient {
             observe: "response",
             responseType: "blob",			
             headers: new HttpHeaders({
-                "Accept": "application/json"
+                "Accept": "application/octet-stream"
             })
         };
 
@@ -260,33 +260,31 @@ export class DevicesClient implements IDevicesClient {
                 try {
                     return this.processGetDeviceThingsDesc(<any>response_);
                 } catch (e) {
-                    return <Observable<DeviceThingsDescVm>><any>_observableThrow(e);
+                    return <Observable<FileResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<DeviceThingsDescVm>><any>_observableThrow(response_);
+                return <Observable<FileResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetDeviceThingsDesc(response: HttpResponseBase): Observable<DeviceThingsDescVm> {
+    protected processGetDeviceThingsDesc(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DeviceThingsDescVm.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DeviceThingsDescVm>(<any>null);
+        return _observableOf<FileResponse>(<any>null);
     }
 
     changeHuePhilipState(sensorId: string | null, lightId: string | null, content: HueLightPhillips): Observable<string> {
@@ -1041,7 +1039,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
 
 export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     name?: string | undefined;
-    thingsDescName?: string | undefined;
+    thingsDescId?: string | undefined;
 
     constructor(data?: ICreateDeviceItemCommand) {
         if (data) {
@@ -1055,7 +1053,7 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.thingsDescName = _data["thingsDescName"];
+            this.thingsDescId = _data["thingsDescId"];
         }
     }
 
@@ -1069,14 +1067,14 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["thingsDescName"] = this.thingsDescName;
+        data["thingsDescId"] = this.thingsDescId;
         return data; 
     }
 }
 
 export interface ICreateDeviceItemCommand {
     name?: string | undefined;
-    thingsDescName?: string | undefined;
+    thingsDescId?: string | undefined;
 }
 
 export class DevicesVm implements IDevicesVm {
@@ -1126,8 +1124,6 @@ export interface IDevicesVm {
 export class DevicesDto implements IDevicesDto {
     id?: string | undefined;
     name?: string | undefined;
-    valueStartFrom?: number;
-    valueEndTo?: number;
 
     constructor(data?: IDevicesDto) {
         if (data) {
@@ -1142,8 +1138,6 @@ export class DevicesDto implements IDevicesDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.valueStartFrom = _data["valueStartFrom"];
-            this.valueEndTo = _data["valueEndTo"];
         }
     }
 
@@ -1158,8 +1152,6 @@ export class DevicesDto implements IDevicesDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["valueStartFrom"] = this.valueStartFrom;
-        data["valueEndTo"] = this.valueEndTo;
         return data; 
     }
 }
@@ -1167,8 +1159,6 @@ export class DevicesDto implements IDevicesDto {
 export interface IDevicesDto {
     id?: string | undefined;
     name?: string | undefined;
-    valueStartFrom?: number;
-    valueEndTo?: number;
 }
 
 export class DeviceLogsVm implements IDeviceLogsVm {
@@ -1349,86 +1339,6 @@ export class DeviceSingleLogsVm implements IDeviceSingleLogsVm {
 export interface IDeviceSingleLogsVm {
     device?: DeviceInfoDto | undefined;
     data?: SensorLogsDto | undefined;
-}
-
-export class DeviceThingsDescVm implements IDeviceThingsDescVm {
-    deviceThingsDescDto?: DeviceThingsDescDto | undefined;
-
-    constructor(data?: IDeviceThingsDescVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.deviceThingsDescDto = _data["deviceThingsDescDto"] ? DeviceThingsDescDto.fromJS(_data["deviceThingsDescDto"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): DeviceThingsDescVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new DeviceThingsDescVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["deviceThingsDescDto"] = this.deviceThingsDescDto ? this.deviceThingsDescDto.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IDeviceThingsDescVm {
-    deviceThingsDescDto?: DeviceThingsDescDto | undefined;
-}
-
-export class DeviceThingsDescDto implements IDeviceThingsDescDto {
-    id?: string | undefined;
-    deviceId?: string | undefined;
-    value?: string | undefined;
-
-    constructor(data?: IDeviceThingsDescDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.deviceId = _data["deviceId"];
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): DeviceThingsDescDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new DeviceThingsDescDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["deviceId"] = this.deviceId;
-        data["value"] = this.value;
-        return data; 
-    }
-}
-
-export interface IDeviceThingsDescDto {
-    id?: string | undefined;
-    deviceId?: string | undefined;
-    value?: string | undefined;
 }
 
 export class HueLightPhillips implements IHueLightPhillips {

@@ -17,10 +17,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
 
         public string DeviceName { get; set; }
 
-        public string BaseUrl { get; set; }
-
-
-        public string ThingsDescName { get; set; }
+        public string ThingsDescId { get; set; }
     }
 
 
@@ -39,7 +36,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
 
         public async Task<string> Handle(CreateDeviceThingsDescCommand request, CancellationToken cancellationToken)
         {
-            var thingsDescTemplate = _context.ThingsDescs.FirstOrDefault(x => x.Name.Equals(request.ThingsDescName));
+            var thingsDescTemplate = _context.ThingsDescs.FirstOrDefault(x => x.Id.Equals(request.ThingsDescId));
             if (thingsDescTemplate == null) return "exception";
             var thingDescString = thingsDescTemplate.Value.ToString();
 
@@ -51,7 +48,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
                 thingDescString = thingDescString.Replace("{devid}", request.DeviceId);
 
             if (thingsDescTemplate.Value.Contains("{baseUrl}"))
-                thingDescString = thingDescString.Replace("{baseUrl", request.BaseUrl);
+                thingDescString = thingDescString.Replace("{baseUrl}", $"https://localhost:44312/api/{request.DeviceId}" );
 
             var entity = new DeviceThingsDesc
             {

@@ -19,7 +19,7 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
     {
         public string Name { get; set; }
 
-        public string ThingsDescName { get; set; }
+        public string ThingsDescId { get; set; }
         
 
     }
@@ -37,9 +37,9 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
 
         public async Task<string> Handle(CreateDeviceItemCommand request, CancellationToken cancellationToken)
         {
-            var thingsDesc = _context.ThingsDescs.Any(x => x.Name.Equals(request.ThingsDescName));
+            var thingsDesc = _context.ThingsDescs.Any(x => x.Id.Equals(request.ThingsDescId));
             if (!thingsDesc)
-                throw new NotFoundException(nameof(ThingsDesc), request.ThingsDescName);
+                throw new NotFoundException(nameof(ThingsDesc), request.ThingsDescId);
 
             var entity = new Sensor
             {
@@ -52,7 +52,7 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
 
 
 
-            var deviceThingsDescId = _mediator.Send(new CreateDeviceThingsDescCommand() { DeviceId = entity.Id, DeviceName =request.Name, ThingsDescName = request.ThingsDescName }, cancellationToken);
+            var deviceThingsDescId = _mediator.Send(new CreateDeviceThingsDescCommand() { DeviceId = entity.Id, DeviceName =request.Name, ThingsDescId = request.ThingsDescId}, cancellationToken);
 
             entity.DeviceThingsDescId = await deviceThingsDescId;
             

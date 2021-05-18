@@ -142,9 +142,10 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": {
+              "application/octet-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeviceThingsDescVm"
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -646,7 +647,7 @@
             "type": "string",
             "nullable": true
           },
-          "thingsDescName": {
+          "thingsDescId": {
             "type": "string",
             "nullable": true
           }
@@ -676,14 +677,6 @@
           "name": {
             "type": "string",
             "nullable": true
-          },
-          "valueStartFrom": {
-            "type": "number",
-            "format": "double"
-          },
-          "valueEndTo": {
-            "type": "number",
-            "format": "double"
           }
         }
       },
@@ -767,38 +760,6 @@
                 "$ref": "#/components/schemas/SensorLogsDto"
               }
             ]
-          }
-        }
-      },
-      "DeviceThingsDescVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "deviceThingsDescDto": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/DeviceThingsDescDto"
-              }
-            ]
-          }
-        }
-      },
-      "DeviceThingsDescDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "deviceId": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
           }
         }
       },

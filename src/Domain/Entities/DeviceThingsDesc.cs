@@ -12,8 +12,6 @@ namespace SoIoT.Domain.Entities
 
         public string Value { get; set; }
 
-        public ESensorType Type { get; set; }
-
         public virtual Sensor Sensor { get; set; }
     }
 }

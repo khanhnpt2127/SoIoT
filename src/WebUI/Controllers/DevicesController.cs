@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SoIoT.Application.DeviceLogs.Queries;
 using SoIoT.Application.Devices.Commands.CreateDeviceItem;
 using SoIoT.Application.Devices.Queries.GetDevices;
@@ -45,9 +47,11 @@ namespace SoIoT.WebUI.Controllers
 
 
         [HttpGet("{sensorId}/thingdesc")]
-        public async Task<ActionResult<DeviceThingsDescVm>> GetDeviceThingsDesc(string sensorId)
+        public async Task<ActionResult> GetDeviceThingsDesc(string sensorId)
         {
-            return await Mediator.Send(new GetDeviceThingsDescQuery {DeviceId = sensorId});
+            var res = await Mediator.Send(new GetDeviceThingsDescQuery {DeviceId = sensorId});
+            
+            return Content(res.ThingsDesc.Value, "application/json");
         } 
 
         [HttpPut("{sensorId}/lights/{lightId}/state")]

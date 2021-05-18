@@ -6,6 +6,6 @@ namespace SoIoT.Application.DeviceThingDesc.Queries
 {
     public class DeviceThingsDescVm
     {
-        public DeviceThingsDescDto DeviceThingsDescDto { get; set; }
+        public DeviceThingsDescDto ThingsDesc { get; set; }
     }
 }

@@ -30,16 +30,13 @@ namespace SoIoT.Application.DeviceThingDesc.Queries
 
         public async Task<DeviceThingsDescVm> Handle(GetDeviceThingsDescQuery request, CancellationToken cancellationToken)
         {
-
-
             var res = await _context.DeviceThingsDescs.FirstOrDefaultAsync(x => x.Sensor.Id == request.DeviceId,
                 cancellationToken);
 
 
-
             return new DeviceThingsDescVm
             {
-                DeviceThingsDescDto = _mapper.Map<DeviceThingsDescDto>(res)
+                ThingsDesc = _mapper.Map<DeviceThingsDescDto>(res)
             };
         }
     }
