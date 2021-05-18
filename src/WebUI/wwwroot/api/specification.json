@@ -158,7 +158,7 @@
         "tags": [
           "Devices"
         ],
-        "operationId": "Devices_ChangeHuePhilipState",
+        "operationId": "Devices_ChangeHueWhiteLampState",
         "parameters": [
           {
             "name": "sensorId",
@@ -186,7 +186,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/HueLightPhillips"
+                "$ref": "#/components/schemas/HueWhiteLamp"
               }
             }
           },
@@ -713,14 +713,6 @@
           "deviceName": {
             "type": "string",
             "nullable": true
-          },
-          "deviceType": {
-            "type": "string",
-            "nullable": true
-          },
-          "deviceUnit": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -733,7 +725,6 @@
             "format": "int32"
           },
           "value": {
-            "type": "string",
             "nullable": true
           },
           "created": {
@@ -764,7 +755,7 @@
           }
         }
       },
-      "HueLightPhillips": {
+      "HueWhiteLamp": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

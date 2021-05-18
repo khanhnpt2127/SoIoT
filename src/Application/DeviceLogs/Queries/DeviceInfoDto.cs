@@ -10,8 +10,5 @@ namespace SoIoT.Application.DeviceLogs.Queries
 
         public string DeviceName { get; set; }
 
-        public string DeviceType { get; set; }
-
-        public string DeviceUnit { get; set; }
     }
 }

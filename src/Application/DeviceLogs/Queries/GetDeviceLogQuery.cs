@@ -44,19 +44,7 @@ namespace SoIoT.Application.DeviceLogs.Queries
             if (sensor != null)
             {
                 string value = null;
-                //switch (sensor.SensorType)
-                //{
-                //    case Domain.Enums.ESensorType.HueWhiteLamp:
-                //        var phillipsRequestBody = new HueLightPhillips
-                //            {@on = false, alert = "none", bri = 100, bri_inc = 0, transisiontime = 100};
-                //        value = JsonConvert.SerializeObject(phillipsRequestBody);
-                //        break;
-                //    case Domain.Enums.ESensorType.HueDaySensor:
-                //        break;
-                //    default:
-                //        value = string.Empty;
-                //        break;
-                //}
+            
 
                 var createDeviceLogCommand = new CreateDeviceLogsCommand
                 {

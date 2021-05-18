@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SoIoT.Domain.Entities.RequestBody
 {
-    public class HueLightPhillips 
+    public class HueWhiteLamp
     {
         public bool on { get; set; }
 

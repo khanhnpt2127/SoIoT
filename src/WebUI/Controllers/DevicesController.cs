@@ -55,7 +55,7 @@ namespace SoIoT.WebUI.Controllers
         } 
 
         [HttpPut("{sensorId}/lights/{lightId}/state")]
-        public async Task<ActionResult<string>> ChangeHuePhilipState (string sensorId, string lightId, [FromBody] HueLightPhillips content)
+        public async Task<ActionResult<string>> ChangeHueWhiteLampState (string sensorId, string lightId, [FromBody] HueWhiteLamp content)
         {
             //TODO: validate a data
 

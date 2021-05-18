@@ -12,7 +12,7 @@ namespace SoIoT.Application.DeviceLogs.Queries
     {
         public int Id { get; set; }
 
-        public string Value { get; set; }
+        public object Value { get; set; }
 
         public DateTime Created { get; set; }
     }

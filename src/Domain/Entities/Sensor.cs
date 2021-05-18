@@ -17,6 +17,7 @@ namespace SoIoT.Domain.Entities
 
         public string Name { get; set; }
 
+        public ESensorType Type { get; set; }
         public ICollection<SensorLog> SensorLogs { get; private set; }
         public string DeviceThingsDescId { get; set; }
         public virtual DeviceThingsDesc DeviceThingsDesc { get; set; }

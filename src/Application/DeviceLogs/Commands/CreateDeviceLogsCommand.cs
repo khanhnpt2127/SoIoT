@@ -31,7 +31,7 @@ namespace SoIoT.Application.DeviceLogs.Commands
         public async Task<int> Handle(CreateDeviceLogsCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.SensorLogs.AddAsync(new SensorLog {Sensor = request.Sensor, Value = request.Value}, cancellationToken);
-
+            await _context.SaveChangesAsync(cancellationToken);
             return entity.Entity.Id;
         }
     }

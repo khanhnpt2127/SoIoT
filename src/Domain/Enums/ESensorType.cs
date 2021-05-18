@@ -6,8 +6,9 @@ namespace SoIoT.Domain.Enums
 {
     public enum ESensorType
     {
-        HueWhiteLamp,
+        Default,
         HueDaySensor,
+        HueWhiteLamp
     }
 
 

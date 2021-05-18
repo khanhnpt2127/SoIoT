@@ -44,9 +44,9 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
+                Type = (ESensorType)request.ThingsDescId
             };
 
-            
             var deviceThingsDescId = _mediator.Send(new CreateDeviceThingsDescCommand() { DeviceId = entity.Id, DeviceName =request.Name, ThingsDescId = request.ThingsDescId}, cancellationToken);
 
             entity.DeviceThingsDescId = await deviceThingsDescId;

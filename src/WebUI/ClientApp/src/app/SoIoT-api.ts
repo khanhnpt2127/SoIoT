@@ -20,7 +20,7 @@ export interface IDevicesClient {
     getDeviceLog(sensorId: string | null): Observable<DeviceLogsVm>;
     getSingleDeviceLog(sensorId: string | null): Observable<DeviceSingleLogsVm>;
     getDeviceThingsDesc(sensorId: string | null): Observable<FileResponse>;
-    changeHuePhilipState(sensorId: string | null, lightId: string | null, content: HueLightPhillips): Observable<string>;
+    changeHueWhiteLampState(sensorId: string | null, lightId: string | null, content: HueWhiteLamp): Observable<string>;
 }
 
 @Injectable({
@@ -287,7 +287,7 @@ export class DevicesClient implements IDevicesClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    changeHuePhilipState(sensorId: string | null, lightId: string | null, content: HueLightPhillips): Observable<string> {
+    changeHueWhiteLampState(sensorId: string | null, lightId: string | null, content: HueWhiteLamp): Observable<string> {
         let url_ = this.baseUrl + "/api/Devices/{sensorId}/lights/{lightId}/state";
         if (sensorId === undefined || sensorId === null)
             throw new Error("The parameter 'sensorId' must be defined.");
@@ -310,11 +310,11 @@ export class DevicesClient implements IDevicesClient {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangeHuePhilipState(response_);
+            return this.processChangeHueWhiteLampState(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChangeHuePhilipState(<any>response_);
+                    return this.processChangeHueWhiteLampState(<any>response_);
                 } catch (e) {
                     return <Observable<string>><any>_observableThrow(e);
                 }
@@ -323,7 +323,7 @@ export class DevicesClient implements IDevicesClient {
         }));
     }
 
-    protected processChangeHuePhilipState(response: HttpResponseBase): Observable<string> {
+    protected processChangeHueWhiteLampState(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -1212,8 +1212,6 @@ export interface IDeviceLogsVm {
 export class DeviceInfoDto implements IDeviceInfoDto {
     id?: string | undefined;
     deviceName?: string | undefined;
-    deviceType?: string | undefined;
-    deviceUnit?: string | undefined;
 
     constructor(data?: IDeviceInfoDto) {
         if (data) {
@@ -1228,8 +1226,6 @@ export class DeviceInfoDto implements IDeviceInfoDto {
         if (_data) {
             this.id = _data["id"];
             this.deviceName = _data["deviceName"];
-            this.deviceType = _data["deviceType"];
-            this.deviceUnit = _data["deviceUnit"];
         }
     }
 
@@ -1244,8 +1240,6 @@ export class DeviceInfoDto implements IDeviceInfoDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["deviceName"] = this.deviceName;
-        data["deviceType"] = this.deviceType;
-        data["deviceUnit"] = this.deviceUnit;
         return data; 
     }
 }
@@ -1253,13 +1247,11 @@ export class DeviceInfoDto implements IDeviceInfoDto {
 export interface IDeviceInfoDto {
     id?: string | undefined;
     deviceName?: string | undefined;
-    deviceType?: string | undefined;
-    deviceUnit?: string | undefined;
 }
 
 export class SensorLogsDto implements ISensorLogsDto {
     id?: number;
-    value?: string | undefined;
+    value?: any | undefined;
     created?: Date;
 
     constructor(data?: ISensorLogsDto) {
@@ -1297,7 +1289,7 @@ export class SensorLogsDto implements ISensorLogsDto {
 
 export interface ISensorLogsDto {
     id?: number;
-    value?: string | undefined;
+    value?: any | undefined;
     created?: Date;
 }
 
@@ -1341,14 +1333,14 @@ export interface IDeviceSingleLogsVm {
     data?: SensorLogsDto | undefined;
 }
 
-export class HueLightPhillips implements IHueLightPhillips {
+export class HueWhiteLamp implements IHueWhiteLamp {
     on?: boolean;
     bri?: number;
     alert?: string | undefined;
     transisiontime?: number;
     bri_inc?: number;
 
-    constructor(data?: IHueLightPhillips) {
+    constructor(data?: IHueWhiteLamp) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1367,9 +1359,9 @@ export class HueLightPhillips implements IHueLightPhillips {
         }
     }
 
-    static fromJS(data: any): HueLightPhillips {
+    static fromJS(data: any): HueWhiteLamp {
         data = typeof data === 'object' ? data : {};
-        let result = new HueLightPhillips();
+        let result = new HueWhiteLamp();
         result.init(data);
         return result;
     }
@@ -1385,7 +1377,7 @@ export class HueLightPhillips implements IHueLightPhillips {
     }
 }
 
-export interface IHueLightPhillips {
+export interface IHueWhiteLamp {
     on?: boolean;
     bri?: number;
     alert?: string | undefined;
