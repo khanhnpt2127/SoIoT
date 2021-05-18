@@ -13,6 +13,5 @@ namespace SoIoT.Domain.Entities
 
         public string UnitString  { get; set; }
 
-        public virtual Sensor Sensor { get; set; }
     }
 }

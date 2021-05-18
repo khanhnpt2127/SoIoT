@@ -117,9 +117,6 @@ namespace SoIoT.Infrastructure.Persistence
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            builder.Entity<Sensor>().HasOne<SensorUnit>(s => s.SensorUnit).WithOne(ad => ad.Sensor)
-                .HasForeignKey<Sensor>(ad => ad.SensorUnitId);
-
             builder.Entity<Sensor>().HasOne<DeviceThingsDesc>(s => s.DeviceThingsDesc).WithOne(ad => ad.Sensor)
                 .HasForeignKey<Sensor>(ad => ad.DeviceThingsDescId);
 

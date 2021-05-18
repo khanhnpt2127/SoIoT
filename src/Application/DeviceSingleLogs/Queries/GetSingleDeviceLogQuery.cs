@@ -39,7 +39,7 @@ namespace SoIoT.Application.DeviceSingleLogs.Queries
                 Sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId)
             };
             await _mediator.Send(createDeviceLogCommand);
-            var data = Queryable.FirstOrDefault(_context.Devices.Include(x => x.SensorUnit), x => x.Id == request.SensorId);
+            var data = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId);
             var d = _context.SensorLogs.Where(x => x.Sensor.Id == data.Id).ToList();
 
             return new DeviceSingleLogsVm
@@ -48,7 +48,6 @@ namespace SoIoT.Application.DeviceSingleLogs.Queries
                 {
                     Id = request.SensorId,
                     DeviceType = data?.SensorType.ToString(),
-                    DeviceUnit = data?.SensorUnit?.UnitString,
                     DeviceName = data?.Name
                 },
                 Data = _mapper.Map<SensorLogsDto>(d.Last())

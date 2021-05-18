@@ -67,7 +67,7 @@ namespace SoIoT.Application.DeviceLogs.Queries
             }
 
 
-            var data = Queryable.FirstOrDefault(_context.Devices.Include(x=>x.SensorUnit), x=>x.Id == request.SensorId);
+            var data = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId);
 
             var d = _context.SensorLogs.Where(x => x.Sensor.Id == data.Id).ToList();
 
@@ -79,7 +79,6 @@ namespace SoIoT.Application.DeviceLogs.Queries
                 Device = new DeviceInfoDto { 
                     Id = request.SensorId,
                     DeviceType = data?.SensorType.ToString(), 
-                    DeviceUnit = data?.SensorUnit?.UnitString,
                     DeviceName = data?.Name
                 },                        
 

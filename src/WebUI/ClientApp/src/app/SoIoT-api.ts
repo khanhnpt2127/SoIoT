@@ -1041,8 +1041,6 @@ export class WeatherForecastClient implements IWeatherForecastClient {
 
 export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     name?: string | undefined;
-    sensorUnitName?: string | undefined;
-    sensorUnitString?: string | undefined;
     eSensorType?: ESensorType;
     thingsDescName?: string | undefined;
 
@@ -1058,8 +1056,6 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.sensorUnitName = _data["sensorUnitName"];
-            this.sensorUnitString = _data["sensorUnitString"];
             this.eSensorType = _data["eSensorType"];
             this.thingsDescName = _data["thingsDescName"];
         }
@@ -1075,8 +1071,6 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["sensorUnitName"] = this.sensorUnitName;
-        data["sensorUnitString"] = this.sensorUnitString;
         data["eSensorType"] = this.eSensorType;
         data["thingsDescName"] = this.thingsDescName;
         return data; 
@@ -1085,8 +1079,6 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
 
 export interface ICreateDeviceItemCommand {
     name?: string | undefined;
-    sensorUnitName?: string | undefined;
-    sensorUnitString?: string | undefined;
     eSensorType?: ESensorType;
     thingsDescName?: string | undefined;
 }
@@ -1286,7 +1278,7 @@ export interface IDeviceInfoDto {
 
 export class SensorLogsDto implements ISensorLogsDto {
     id?: number;
-    value?: number;
+    value?: string | undefined;
     created?: Date;
 
     constructor(data?: ISensorLogsDto) {
@@ -1324,7 +1316,7 @@ export class SensorLogsDto implements ISensorLogsDto {
 
 export interface ISensorLogsDto {
     id?: number;
-    value?: number;
+    value?: string | undefined;
     created?: Date;
 }
 

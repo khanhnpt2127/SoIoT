@@ -38,8 +38,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                SensorUnitName = "Celcius",
-                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -67,8 +65,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                SensorUnitName = "Celcius",
-                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -99,8 +95,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                SensorUnitName = "Celcius",
-                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -133,8 +127,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                SensorUnitName = "Celcius",
-                SensorUnitString = "C"
             };
 
             var deviceId = await SendAsync(device);
@@ -149,8 +141,6 @@ namespace SoIoT.Application.IntegrationTests.SensorLogs.Command
 
             deviceVm.Device.Id.Should().Be(item.Id);
             deviceVm.Data.Should().NotBeNull();
-            deviceVm.Device.DeviceType.Should().Be("Temparature");
-            deviceVm.Device.DeviceUnit.Should().Be("C");
         }
 
 

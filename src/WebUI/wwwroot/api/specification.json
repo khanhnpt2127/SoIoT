@@ -646,14 +646,6 @@
             "type": "string",
             "nullable": true
           },
-          "sensorUnitName": {
-            "type": "string",
-            "nullable": true
-          },
-          "sensorUnitString": {
-            "type": "string",
-            "nullable": true
-          },
           "eSensorType": {
             "$ref": "#/components/schemas/ESensorType"
           },
@@ -762,8 +754,8 @@
             "format": "int32"
           },
           "value": {
-            "type": "number",
-            "format": "double"
+            "type": "string",
+            "nullable": true
           },
           "created": {
             "type": "string",

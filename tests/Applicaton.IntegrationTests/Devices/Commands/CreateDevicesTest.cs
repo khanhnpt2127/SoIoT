@@ -7,6 +7,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SoIoT.Application.Common.Exceptions;
 using SoIoT.Application.Devices.Commands.CreateDeviceItem;
+using SoIoT.Application.ThingsDesc.Commands;
 using SoIoT.Domain.Entities;
 
 namespace SoIoT.Application.IntegrationTests.Devices.Commands
@@ -20,7 +21,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
         {
             var command = new CreateDeviceItemCommand();
 
-
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<ValidationException>();
         }
@@ -30,13 +30,21 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
         public async Task ShouldCreateDeviceItem()
         {
 
+            var thingsDesc = new CreateThingsDescCommand
+            {
+                Name= "HUE Dim Light",
+                Value= "test"
+            }; 
+
+            await SendAsync(thingsDesc);
+
             var userId = await RunAsDefaultUserAsync();
 
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                SensorUnitName = "Celcius",
-                SensorUnitString = "C"
+                ESensorType = 0,
+                ThingsDescName = "HUE Dim Light"
             };
 
 
