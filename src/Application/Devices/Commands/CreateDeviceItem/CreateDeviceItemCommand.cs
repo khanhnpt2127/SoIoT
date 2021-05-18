@@ -19,9 +19,8 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
     {
         public string Name { get; set; }
 
-        public string ThingsDescId { get; set; }
+        public int ThingsDescId { get; set; }
         
-
     }
 
     public class CreateDeviceItemCommandHandler : IRequestHandler<CreateDeviceItemCommand, string>
@@ -48,10 +47,6 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
             };
 
             
-
-
-
-
             var deviceThingsDescId = _mediator.Send(new CreateDeviceThingsDescCommand() { DeviceId = entity.Id, DeviceName =request.Name, ThingsDescId = request.ThingsDescId}, cancellationToken);
 
             entity.DeviceThingsDescId = await deviceThingsDescId;

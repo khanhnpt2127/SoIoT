@@ -8,7 +8,7 @@ using SoIoT.Application.Common.Interfaces;
 
 namespace SoIoT.Application.ThingsDesc.Commands
 {
-    public class CreateThingsDescCommand : IRequest<string>
+    public class CreateThingsDescCommand : IRequest<int>
     {
         public string Name { get; set; }
 
@@ -16,7 +16,7 @@ namespace SoIoT.Application.ThingsDesc.Commands
     }
 
 
-    public class CreateThingsDescCommandHandler : IRequestHandler<CreateThingsDescCommand, string>
+    public class CreateThingsDescCommandHandler : IRequestHandler<CreateThingsDescCommand, int>
     {
         private readonly IApplicationDbContext _context;
 
@@ -29,11 +29,10 @@ namespace SoIoT.Application.ThingsDesc.Commands
         }
 
 
-        public async Task<string> Handle(CreateThingsDescCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateThingsDescCommand request, CancellationToken cancellationToken)
         {
             var entity = new Domain.Entities.ThingsDesc
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 Value = request.Value
             };

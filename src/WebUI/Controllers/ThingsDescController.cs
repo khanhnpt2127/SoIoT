@@ -19,7 +19,7 @@ namespace SoIoT.WebUI.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<string>> Create(CreateThingsDescCommand command)
+        public async Task<ActionResult<int>> Create(CreateThingsDescCommand command)
         {
             return await Mediator.Send(command);
         }

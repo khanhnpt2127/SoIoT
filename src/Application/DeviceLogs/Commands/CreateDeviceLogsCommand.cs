@@ -23,13 +23,9 @@ namespace SoIoT.Application.DeviceLogs.Commands
     {
         private readonly IApplicationDbContext _context;
 
-        private readonly IRandomService _randomService;
-        private readonly IDateTime _dateTime;
-        public CreateDeviceLogsCommandHandler(IApplicationDbContext context, IRandomService randomService, IDateTime dateTime)
+        public CreateDeviceLogsCommandHandler(IApplicationDbContext context)
         {
             _context = context;
-            _randomService = randomService;
-            _dateTime = dateTime;
         }
 
         public async Task<int> Handle(CreateDeviceLogsCommand request, CancellationToken cancellationToken)

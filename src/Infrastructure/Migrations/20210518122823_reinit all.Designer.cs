@@ -10,14 +10,14 @@ using SoIoT.Infrastructure.Persistence;
 namespace SoIoT.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201118222742_Init")]
-    partial class Init
+    [Migration("20210518122823_reinit all")]
+    partial class reinitall
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -238,7 +238,7 @@ namespace SoIoT.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SoIoT.Domain.Entities.Sensor", b =>
+            modelBuilder.Entity("SoIoT.Domain.Entities.DeviceThingsDesc", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -255,25 +255,42 @@ namespace SoIoT.Infrastructure.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SensorType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SensorUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("ValueEndTo")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ValueStartFrom")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SensorUnitId")
-                        .IsUnique();
+                    b.ToTable("DeviceThingsDescs");
+                });
+
+            modelBuilder.Entity("SoIoT.Domain.Entities.Sensor", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceThingsDescId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceThingsDescId")
+                        .IsUnique()
+                        .HasFilter("[DeviceThingsDescId] IS NOT NULL");
 
                     b.ToTable("Devices");
                 });
@@ -300,8 +317,8 @@ namespace SoIoT.Infrastructure.Migrations
                     b.Property<string>("SensorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -338,6 +355,36 @@ namespace SoIoT.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SensorUnits");
+                });
+
+            modelBuilder.Entity("SoIoT.Domain.Entities.ThingsDesc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ThingsDescs");
                 });
 
             modelBuilder.Entity("SoIoT.Domain.Entities.TodoItem", b =>
@@ -536,11 +583,9 @@ namespace SoIoT.Infrastructure.Migrations
 
             modelBuilder.Entity("SoIoT.Domain.Entities.Sensor", b =>
                 {
-                    b.HasOne("SoIoT.Domain.Entities.SensorUnit", "SensorUnit")
+                    b.HasOne("SoIoT.Domain.Entities.DeviceThingsDesc", "DeviceThingsDesc")
                         .WithOne("Sensor")
-                        .HasForeignKey("SoIoT.Domain.Entities.Sensor", "SensorUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SoIoT.Domain.Entities.Sensor", "DeviceThingsDescId");
                 });
 
             modelBuilder.Entity("SoIoT.Domain.Entities.SensorLog", b =>

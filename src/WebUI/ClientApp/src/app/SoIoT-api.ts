@@ -348,7 +348,7 @@ export class DevicesClient implements IDevicesClient {
 
 export interface IThingsDescClient {
     get(): Observable<ThingsDescVm>;
-    create(command: CreateThingsDescCommand): Observable<string>;
+    create(command: CreateThingsDescCommand): Observable<number>;
 }
 
 @Injectable({
@@ -412,7 +412,7 @@ export class ThingsDescClient implements IThingsDescClient {
         return _observableOf<ThingsDescVm>(<any>null);
     }
 
-    create(command: CreateThingsDescCommand): Observable<string> {
+    create(command: CreateThingsDescCommand): Observable<number> {
         let url_ = this.baseUrl + "/api/ThingsDesc";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -435,14 +435,14 @@ export class ThingsDescClient implements IThingsDescClient {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<string>><any>_observableThrow(e);
+                    return <Observable<number>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<string>><any>_observableThrow(response_);
+                return <Observable<number>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<string> {
+    protected processCreate(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -461,7 +461,7 @@ export class ThingsDescClient implements IThingsDescClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<string>(<any>null);
+        return _observableOf<number>(<any>null);
     }
 }
 
@@ -1039,7 +1039,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
 
 export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     name?: string | undefined;
-    thingsDescId?: string | undefined;
+    thingsDescId?: number;
 
     constructor(data?: ICreateDeviceItemCommand) {
         if (data) {
@@ -1074,7 +1074,7 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
 
 export interface ICreateDeviceItemCommand {
     name?: string | undefined;
-    thingsDescId?: string | undefined;
+    thingsDescId?: number;
 }
 
 export class DevicesVm implements IDevicesVm {
@@ -1438,7 +1438,7 @@ export interface IThingsDescVm {
 }
 
 export class ThingsDescDto implements IThingsDescDto {
-    id?: string | undefined;
+    id?: number;
 
     constructor(data?: IThingsDescDto) {
         if (data) {
@@ -1470,7 +1470,7 @@ export class ThingsDescDto implements IThingsDescDto {
 }
 
 export interface IThingsDescDto {
-    id?: string | undefined;
+    id?: number;
 }
 
 export class CreateThingsDescCommand implements ICreateThingsDescCommand {

@@ -7,7 +7,7 @@ namespace SoIoT.Domain.Entities
 {
     public class ThingsDesc : AuditableEntity
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 

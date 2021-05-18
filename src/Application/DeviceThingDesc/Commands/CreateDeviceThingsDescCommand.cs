@@ -17,7 +17,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
 
         public string DeviceName { get; set; }
 
-        public string ThingsDescId { get; set; }
+        public int ThingsDescId { get; set; }
     }
 
 
@@ -36,7 +36,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
 
         public async Task<string> Handle(CreateDeviceThingsDescCommand request, CancellationToken cancellationToken)
         {
-            var thingsDescTemplate = _context.ThingsDescs.FirstOrDefault(x => x.Id.Equals(request.ThingsDescId));
+            var thingsDescTemplate = _context.ThingsDescs.FirstOrDefault(x => x.Id == request.ThingsDescId);
             if (thingsDescTemplate == null) return "exception";
             var thingDescString = thingsDescTemplate.Value.ToString();
 

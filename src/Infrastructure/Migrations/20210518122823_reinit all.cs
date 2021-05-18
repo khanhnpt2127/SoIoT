@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SoIoT.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class reinitall : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +64,22 @@ namespace SoIoT.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DeviceThingsDescs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceThingsDescs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -96,6 +112,24 @@ namespace SoIoT.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SensorUnits", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ThingsDescs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ThingsDescs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -232,20 +266,17 @@ namespace SoIoT.Infrastructure.Migrations
                     LastModifiedBy = table.Column<string>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    ValueStartFrom = table.Column<double>(nullable: false),
-                    ValueEndTo = table.Column<double>(nullable: false),
-                    SensorType = table.Column<int>(nullable: false),
-                    SensorUnitId = table.Column<int>(nullable: false)
+                    DeviceThingsDescId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Devices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Devices_SensorUnits_SensorUnitId",
-                        column: x => x.SensorUnitId,
-                        principalTable: "SensorUnits",
+                        name: "FK_Devices_DeviceThingsDescs_DeviceThingsDescId",
+                        column: x => x.DeviceThingsDescId,
+                        principalTable: "DeviceThingsDescs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -286,7 +317,7 @@ namespace SoIoT.Infrastructure.Migrations
                     Created = table.Column<DateTime>(nullable: false),
                     LastModifiedBy = table.Column<string>(nullable: true),
                     LastModified = table.Column<DateTime>(nullable: true),
-                    Value = table.Column<double>(nullable: false),
+                    Value = table.Column<string>(nullable: true),
                     SensorId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -351,10 +382,11 @@ namespace SoIoT.Infrastructure.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Devices_SensorUnitId",
+                name: "IX_Devices_DeviceThingsDescId",
                 table: "Devices",
-                column: "SensorUnitId",
-                unique: true);
+                column: "DeviceThingsDescId",
+                unique: true,
+                filter: "[DeviceThingsDescId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
@@ -404,6 +436,12 @@ namespace SoIoT.Infrastructure.Migrations
                 name: "SensorLogs");
 
             migrationBuilder.DropTable(
+                name: "SensorUnits");
+
+            migrationBuilder.DropTable(
+                name: "ThingsDescs");
+
+            migrationBuilder.DropTable(
                 name: "TodoItems");
 
             migrationBuilder.DropTable(
@@ -419,7 +457,7 @@ namespace SoIoT.Infrastructure.Migrations
                 name: "TodoLists");
 
             migrationBuilder.DropTable(
-                name: "SensorUnits");
+                name: "DeviceThingsDescs");
         }
     }
 }

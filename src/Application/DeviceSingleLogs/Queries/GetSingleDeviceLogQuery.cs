@@ -34,22 +34,28 @@ namespace SoIoT.Application.DeviceSingleLogs.Queries
 
         public async Task<DeviceSingleLogsVm> Handle(GetSingleDeviceLogQuery request, CancellationToken cancellationToken)
         {
-            var createDeviceLogCommand = new CreateDeviceLogsCommand
+            //TODO: if first time => init 
+            var isFirstTime = _context.SensorLogs.Any(x => x.Sensor.Id == request.SensorId);
+            if (!isFirstTime)
             {
-                Sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId)
-            };
-            await _mediator.Send(createDeviceLogCommand);
-            var data = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId);
-            var d = _context.SensorLogs.Where(x => x.Sensor.Id == data.Id).ToList();
+                var createDeviceLogCommand = new CreateDeviceLogsCommand
+                {
+                    Sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId)
+                };
+                await _mediator.Send(createDeviceLogCommand);
+            }
+
+            var sensor = _context.Devices.FirstOrDefault(x => x.Id == request.SensorId);
+            var sensorLogs = _context.SensorLogs.Where(x => x.Sensor.Id == sensor.Id).ToList();
 
             return new DeviceSingleLogsVm
             {
                 Device = new DeviceInfoDto
                 {
                     Id = request.SensorId,
-                    DeviceName = data?.Name
+                    DeviceName = sensor?.Name
                 },
-                Data = _mapper.Map<SensorLogsDto>(d.Last())
+                Data = _mapper.Map<SensorLogsDto>(sensorLogs.Last())
             };
 
 
