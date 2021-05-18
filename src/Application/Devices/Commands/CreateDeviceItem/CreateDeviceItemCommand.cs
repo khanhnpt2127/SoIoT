@@ -19,13 +19,10 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
     {
         public string Name { get; set; }
 
-        public ESensorType ESensorType { get; set; }
-
         public string ThingsDescName { get; set; }
         
 
     }
-
 
     public class CreateDeviceItemCommandHandler : IRequestHandler<CreateDeviceItemCommand, string>
     {
@@ -48,8 +45,12 @@ namespace SoIoT.Application.Devices.Commands.CreateDeviceItem
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
-                SensorType = request.ESensorType,
             };
+
+            
+
+
+
 
             var deviceThingsDescId = _mediator.Send(new CreateDeviceThingsDescCommand() { DeviceId = entity.Id, DeviceName =request.Name, ThingsDescName = request.ThingsDescName }, cancellationToken);
 

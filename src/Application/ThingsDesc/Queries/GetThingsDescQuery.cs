@@ -27,12 +27,11 @@ namespace SoIoT.Application.ThingsDesc.Queries
             _context = context;
         }
 
-
         public async Task<ThingsDescVm> Handle(GetThingsDescQuery request, CancellationToken cancellationToken)
         {
             return new ThingsDescVm()
             {
-                ThingsDescDtos = await _context.ThingsDescs.ProjectTo<ThingsDescDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken)
+                List = await _context.ThingsDescs.ProjectTo<ThingsDescDto>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken)
             };
         }
     }

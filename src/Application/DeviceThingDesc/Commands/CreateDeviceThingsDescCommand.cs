@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SoIoT.Application.Common.Interfaces;
 using SoIoT.Domain.Entities;
+using SoIoT.Domain.Enums;
 
 namespace SoIoT.Application.DeviceThingDesc.Commands
 {
@@ -17,6 +18,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
         public string DeviceName { get; set; }
 
         public string BaseUrl { get; set; }
+
 
         public string ThingsDescName { get; set; }
     }
@@ -40,7 +42,7 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
             var thingsDescTemplate = _context.ThingsDescs.FirstOrDefault(x => x.Name.Equals(request.ThingsDescName));
             if (thingsDescTemplate == null) return "exception";
             var thingDescString = thingsDescTemplate.Value.ToString();
-            //TODO: handle map TD template with device specification
+
             if (thingsDescTemplate.Value.Contains("{nameofdev}"))
                 thingDescString = thingDescString.Replace("{nameofdev}", request.DeviceName);
 
@@ -51,12 +53,10 @@ namespace SoIoT.Application.DeviceThingDesc.Commands
             if (thingsDescTemplate.Value.Contains("{baseUrl}"))
                 thingDescString = thingDescString.Replace("{baseUrl", request.BaseUrl);
 
-
-            //TODO: save to Db
             var entity = new DeviceThingsDesc
             {
                 Id = Guid.NewGuid().ToString(),
-                Value = thingDescString 
+                Value = thingDescString,
             };
 
             await _context.DeviceThingsDescs.AddAsync(entity, cancellationToken);

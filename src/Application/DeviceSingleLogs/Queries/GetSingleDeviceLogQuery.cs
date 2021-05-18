@@ -47,7 +47,6 @@ namespace SoIoT.Application.DeviceSingleLogs.Queries
                 Device = new DeviceInfoDto
                 {
                     Id = request.SensorId,
-                    DeviceType = data?.SensorType.ToString(),
                     DeviceName = data?.Name
                 },
                 Data = _mapper.Map<SensorLogsDto>(d.Last())

@@ -1041,7 +1041,6 @@ export class WeatherForecastClient implements IWeatherForecastClient {
 
 export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     name?: string | undefined;
-    eSensorType?: ESensorType;
     thingsDescName?: string | undefined;
 
     constructor(data?: ICreateDeviceItemCommand) {
@@ -1056,7 +1055,6 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     init(_data?: any) {
         if (_data) {
             this.name = _data["name"];
-            this.eSensorType = _data["eSensorType"];
             this.thingsDescName = _data["thingsDescName"];
         }
     }
@@ -1071,7 +1069,6 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
-        data["eSensorType"] = this.eSensorType;
         data["thingsDescName"] = this.thingsDescName;
         return data; 
     }
@@ -1079,13 +1076,7 @@ export class CreateDeviceItemCommand implements ICreateDeviceItemCommand {
 
 export interface ICreateDeviceItemCommand {
     name?: string | undefined;
-    eSensorType?: ESensorType;
     thingsDescName?: string | undefined;
-}
-
-export enum ESensorType {
-    HueWhiteLamp = 0,
-    HueDaySensor = 1,
 }
 
 export class DevicesVm implements IDevicesVm {
@@ -1493,7 +1484,7 @@ export interface IHueLightPhillips {
 }
 
 export class ThingsDescVm implements IThingsDescVm {
-    thingsDescDtos?: ThingsDescDto[] | undefined;
+    list?: ThingsDescDto[] | undefined;
 
     constructor(data?: IThingsDescVm) {
         if (data) {
@@ -1506,10 +1497,10 @@ export class ThingsDescVm implements IThingsDescVm {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["thingsDescDtos"])) {
-                this.thingsDescDtos = [] as any;
-                for (let item of _data["thingsDescDtos"])
-                    this.thingsDescDtos!.push(ThingsDescDto.fromJS(item));
+            if (Array.isArray(_data["list"])) {
+                this.list = [] as any;
+                for (let item of _data["list"])
+                    this.list!.push(ThingsDescDto.fromJS(item));
             }
         }
     }
@@ -1523,22 +1514,21 @@ export class ThingsDescVm implements IThingsDescVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.thingsDescDtos)) {
-            data["thingsDescDtos"] = [];
-            for (let item of this.thingsDescDtos)
-                data["thingsDescDtos"].push(item.toJSON());
+        if (Array.isArray(this.list)) {
+            data["list"] = [];
+            for (let item of this.list)
+                data["list"].push(item.toJSON());
         }
         return data; 
     }
 }
 
 export interface IThingsDescVm {
-    thingsDescDtos?: ThingsDescDto[] | undefined;
+    list?: ThingsDescDto[] | undefined;
 }
 
 export class ThingsDescDto implements IThingsDescDto {
     id?: string | undefined;
-    value?: string | undefined;
 
     constructor(data?: IThingsDescDto) {
         if (data) {
@@ -1552,7 +1542,6 @@ export class ThingsDescDto implements IThingsDescDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.value = _data["value"];
         }
     }
 
@@ -1566,14 +1555,12 @@ export class ThingsDescDto implements IThingsDescDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["value"] = this.value;
         return data; 
     }
 }
 
 export interface IThingsDescDto {
     id?: string | undefined;
-    value?: string | undefined;
 }
 
 export class CreateThingsDescCommand implements ICreateThingsDescCommand {

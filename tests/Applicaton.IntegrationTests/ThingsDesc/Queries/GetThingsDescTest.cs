@@ -28,8 +28,8 @@ namespace SoIoT.Application.IntegrationTests.ThingsDesc.Queries
 
             var result = await SendAsync(query);
 
-            result.ThingsDescDtos.Should().HaveCount(1);
-            result.ThingsDescDtos.First().Id.Should().NotBeNullOrEmpty();
+            result.List.Should().HaveCount(1);
+            result.List.First().Id.Should().NotBeNullOrEmpty();
         }
     }
 }

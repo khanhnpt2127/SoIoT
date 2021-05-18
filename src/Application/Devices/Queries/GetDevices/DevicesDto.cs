@@ -8,9 +8,5 @@ namespace SoIoT.Application.Devices.Queries.GetDevices
         public string Id { get; set; }
 
         public string Name { get; set; }
-
-        public double ValueStartFrom { get; set; }
-
-        public double ValueEndTo { get; set; }
     }
 }

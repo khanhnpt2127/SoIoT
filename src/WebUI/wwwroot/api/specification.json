@@ -646,26 +646,11 @@
             "type": "string",
             "nullable": true
           },
-          "eSensorType": {
-            "$ref": "#/components/schemas/ESensorType"
-          },
           "thingsDescName": {
             "type": "string",
             "nullable": true
           }
         }
-      },
-      "ESensorType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "HueWhiteLamp",
-          "HueDaySensor"
-        ],
-        "enum": [
-          0,
-          1
-        ]
       },
       "DevicesVm": {
         "type": "object",
@@ -846,7 +831,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "thingsDescDtos": {
+          "list": {
             "type": "array",
             "nullable": true,
             "items": {
@@ -860,10 +845,6 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": {
             "type": "string",
             "nullable": true
           }

@@ -8,8 +8,5 @@ namespace SoIoT.Application.ThingsDesc.Queries
     public class ThingsDescDto : IMapFrom<Domain.Entities.ThingsDesc>
     {
         public string Id { get; set; }
-
-
-        public string Value { get; set; }
     }
 }

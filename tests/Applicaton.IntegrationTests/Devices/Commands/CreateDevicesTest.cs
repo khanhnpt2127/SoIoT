@@ -43,7 +43,6 @@ namespace SoIoT.Application.IntegrationTests.Devices.Commands
             var device = new CreateDeviceItemCommand
             {
                 Name = "New Devices",
-                ESensorType = 0,
                 ThingsDescName = "HUE Dim Light"
             };
 
